@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void removeNewLines(char *s);
-
 #define LINELENGTH 16
 #define HALFLINE   8
 
+void removeNewLines(char *s);
+
+size_t GetFileSize(FILE* File);
 
 int main(int argc, char* argv[]){
   if (argc != 2){
@@ -15,11 +16,8 @@ int main(int argc, char* argv[]){
   char* Filename = argv[1];
   FILE* File = fopen(Filename, "r");
 
-  fseek(File, 0, SEEK_END);
+  size_t FileSize = GetFileSize(File);
 
-  size_t FileSize = ftell(File);
-
-  fseek(File, 0, SEEK_SET);
   char buffer[FileSize];
 
   fread(buffer, FileSize, 1, File);
@@ -46,6 +44,17 @@ int main(int argc, char* argv[]){
     }
   }
   return EXIT_SUCCESS;
+}
+
+size_t GetFileSize(FILE* File){
+
+  fseek(File, 0, SEEK_END);
+
+  size_t FileSize = ftell(File);
+
+  rewind(File);
+
+  return FileSize;
 }
 
 void removeNewLines(char *s){
